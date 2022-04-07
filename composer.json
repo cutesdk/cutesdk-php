@@ -1,0 +1,32 @@
+{
+    "name": "idoubi/cutesdk",
+    "description": "sdk of some open platforms",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "idoubi",
+            "email": "me@idoubi.cc"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.4",
+        "symfony/cache": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "cutesdk\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+          "cutesdk\\tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
