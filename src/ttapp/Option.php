@@ -5,9 +5,14 @@ namespace cutesdk\ttapp;
 class Option
 {
     public static $defaultOptions = [
-        'base_uri' => 'https://developer.toutiao.com',
         'appid' => '',
         'secret' => '',
-        'debug' => false,
+        'request' => [
+            'base_uri' => 'https://developer.toutiao.com',
+            'debug' => false,
+        ],
+        'cache' => [
+            'driver' => 'file',
+        ]
     ];
 }

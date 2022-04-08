@@ -34,6 +34,13 @@ class ClientTest extends TestCase
         $this->assertSame(7200, $res->get('data.expires_in'));
     }
 
+    public function testPickAccessToken()
+    {
+        $res = $this->client->pickAccessToken();
+
+        $this->assertNotEmpty($res);
+    }
+
     public function testPostApiWithAccessTokenInHeader()
     {
         $uri = '/api/v2/tags/text/antidirt';
@@ -68,5 +75,14 @@ class ClientTest extends TestCase
         $res = $this->client->postJson($uri, $data);
 
         $this->assertSame(3, $res->get('error'));
+    }
+
+    public function testCustomCache()
+    {
+        $this->client->setCache(new CustomCache());
+
+        $res = $this->client->pickAccessToken();
+
+        $this->assertNotEmpty($res);
     }
 }

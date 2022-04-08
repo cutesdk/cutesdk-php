@@ -1,5 +1,7 @@
 <?php
 
+// request handler
+
 namespace cutesdk\common;
 
 use GuzzleHttp\Client;

@@ -2,20 +2,16 @@
 
 namespace cutesdk\ttapp;
 
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use cutesdk\common\Request;
-use cutesdk\common\Response;
+use cutesdk\common\Cache;
 
 class Client
 {
-    // appid
-    private $appid;
-
-    // appsecret
-    private $secret;
-
     // client options
     private $options;
+
+    // request handler 
+    private $request;
 
     // cache handler
     private $cache;
@@ -28,11 +24,11 @@ class Client
         $options = array_merge(Option::$defaultOptions, $customOptions);
 
         $this->options = $options;
-        $this->appid = $options['appid'] ?? '';
-        $this->secret = $options['secret'] ?? '';
+
+        $this->request = new Request($options['request'] ?? []);
 
         // default cache handler
-        $this->cache = new FilesystemAdapter();
+        $this->cache = new Cache($options['cache'] ?? []);
 
         // default access_token handler
         $this->accessToken = new AccessToken($this);
@@ -74,12 +70,12 @@ class Client
 
     public function getAppid()
     {
-        return $this->appid;
+        return $this->options['appid'] ?? '';
     }
 
     public function getSecret()
     {
-        return $this->secret;
+        return $this->options['secret'] ?? '';
     }
 
     public function __call($method, $arguments)
@@ -90,10 +86,8 @@ class Client
             return call_user_func_array([$api, $method], $arguments);
         }
 
-        $request = new Request($this->options);
-
-        if (method_exists($request, $method)) {
-            return call_user_func_array([$request, $method], $arguments);
+        if (method_exists($this->request, $method)) {
+            return call_user_func_array([$this->request, $method], $arguments);
         }
 
         throw new \Exception('method not exists: ' . $method);

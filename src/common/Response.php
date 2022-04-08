@@ -1,5 +1,7 @@
 <?php
 
+// response handler
+
 namespace cutesdk\common;
 
 class Response

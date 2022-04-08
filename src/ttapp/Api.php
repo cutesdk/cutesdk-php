@@ -26,6 +26,7 @@ class Api
         return $this->client->postJson($uri, $data);
     }
 
+    // api: code2session
     public function code2session(string $code, string $anonymousCode = ''): Response
     {
         $uri = '/api/apps/v2/jscode2session';
@@ -39,6 +40,7 @@ class Api
         return $this->client->postJson($uri, $data);
     }
 
+    // api: createQRCode
     public function createQrcode(array $data = []): Response
     {
         $uri = '/api/apps/qrcode';
