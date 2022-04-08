@@ -15,7 +15,9 @@ class ClientTest extends TestCase
         $this->client = new Client([
             'appid' => 'ttfb118dac643b1233',
             'secret' => '92811c680709b5bbc442dba42bb2a681cf04acd5',
-            'debug' => false,
+            'request' => [
+                'debug' => false
+            ],
         ]);
     }
 
@@ -80,6 +82,59 @@ class ClientTest extends TestCase
     public function testCustomCache()
     {
         $this->client->setCache(new CustomCache());
+
+        $res = $this->client->pickAccessToken();
+
+        $this->assertNotEmpty($res);
+    }
+
+    public function testCustomAccessToken()
+    {
+        $this->client->setAccessToken(new CustomAccessToken($this->client));
+
+        $res = $this->client->pickAccessToken();
+
+        $this->assertNotEmpty($res);
+    }
+
+    public function testCustomCacheKey()
+    {
+        $options = [
+            'cache' => [
+                'driver' => 'redis',
+                'redis' => [
+                    'dsn' => 'redis://test123@127.0.0.1:6379/1'
+                ]
+            ]
+        ];
+
+        $this->client->setOptions($options);
+
+        $cacheKey = "easywechat.kernel.access_token." . md5(json_encode([
+            'grant_type' => 'client_credential',
+            'appid' => $this->client->getAppid(),
+            'secret' => $this->client->getSecret(),
+        ]));
+
+        $this->client->getAccessToken()->setCacheKey($cacheKey);
+
+        $res = $this->client->pickAccessToken();
+
+        $this->assertNotEmpty($res);
+    }
+
+    public function testCacheWithRedis()
+    {
+        $options = [
+            'cache' => [
+                'driver' => 'redis',
+                'redis' => [
+                    'dsn' => 'redis://test123@127.0.0.1:6379/1'
+                ]
+            ]
+        ];
+
+        $this->client->setOptions($options);
 
         $res = $this->client->pickAccessToken();
 

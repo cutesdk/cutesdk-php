@@ -21,14 +21,12 @@ class Client
 
     public function __construct(array $customOptions)
     {
-        $options = array_merge(Option::$defaultOptions, $customOptions);
+        $this->options = array_replace_recursive(Option::$defaultOptions, $customOptions);
 
-        $this->options = $options;
-
-        $this->request = new Request($options['request'] ?? []);
+        $this->request = new Request($this->options['request'] ?? []);
 
         // default cache handler
-        $this->cache = new Cache($options['cache'] ?? []);
+        $this->cache = new Cache($this->options['cache'] ?? []);
 
         // default access_token handler
         $this->accessToken = new AccessToken($this);
@@ -61,6 +59,14 @@ class Client
     public function pickAccessToken()
     {
         return $this->getAccessToken()->getToken();
+    }
+
+    public function setOptions(array $options)
+    {
+        if (!empty($options['cache']['driver'])) {
+            $this->options['cache'] = $options['cache'];
+            $this->cache = new Cache($options['cache']);
+        }
     }
 
     public function getOptions()

@@ -9,7 +9,7 @@ class Option
         'secret' => '',
         'request' => [
             'base_uri' => 'https://developer.toutiao.com',
-            'debug' => false,
+            'debug' => true,
         ],
         'cache' => [
             'driver' => 'file',

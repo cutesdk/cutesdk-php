@@ -9,8 +9,6 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class Cache
 {
-    private $driver;
-
     private $cache;
 
     public function __construct(array $options)
@@ -18,32 +16,29 @@ class Cache
         $driver = $options['driver'] ?? 'file';
 
         if ($driver == 'redis') {
+            $dsn = $options['redis']['dsn'] ?? '';
+            if ($dsn) {
+                $conn = RedisAdapter::createConnection($dsn);
+                $this->cache = new RedisAdapter($conn);
+            }
         } else {
             $this->cache = new FilesystemAdapter($options['namespace'] ?? '', $options['expire'] ?? 0, $options['dir'] ?? null);
         }
-
-        $this->driver = $driver;
     }
 
     public function get(string $key): mixed
     {
-        if ($this->driver == 'file') {
-            $cacheItem = $this->cache->getItem($key);
+        $cacheItem = $this->cache->getItem($key);
 
-            return $cacheItem->get();
-        }
-
-        return null;
+        return $cacheItem->get();
     }
 
     public function set(string $key, mixed $value, int $expire)
     {
-        if ($this->driver == 'file') {
-            $cacheItem = $this->cache->getItem($key);
-            $cacheItem->set($value);
-            $cacheItem->expiresAfter($expire);
+        $cacheItem = $this->cache->getItem($key);
+        $cacheItem->set($value);
+        $cacheItem->expiresAfter($expire);
 
-            $this->cache->save($cacheItem);
-        }
+        $this->cache->save($cacheItem);
     }
 }

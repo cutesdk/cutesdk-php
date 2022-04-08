@@ -33,7 +33,6 @@ class AccessToken
         $cache = $this->client->getCache();
 
         $token = $cache->get($this->getCacheKey());
-
         if ($token && is_string($token)) {
             return $token;
         }
@@ -43,7 +42,7 @@ class AccessToken
 
         if ($token = $res->get('data.access_token')) {
             // set access_token to cache
-            $this->setToken($token, $res->get('data.expires_in'));
+            $this->setToken($token, $res->get('data.expires_in') - 300);
 
             return $token;
         }
@@ -56,7 +55,6 @@ class AccessToken
         // set access_token to cache 
 
         $cache = $this->client->getCache();
-
         $cache->set($this->getCacheKey(), $token, $expire);
     }
 }
