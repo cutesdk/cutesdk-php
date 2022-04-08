@@ -60,6 +60,7 @@ class ClientTest extends TestCase
             ]
         ]);
 
+
         $this->assertNotEmpty($res->get('log_id'));
     }
 
@@ -73,10 +74,9 @@ class ClientTest extends TestCase
             'image' => 'xx',
             'image_data' => 'xxx'
         ];
-
         $res = $this->client->postJson($uri, $data);
 
-        $this->assertSame(3, $res->get('error'));
+        $this->assertNotEmpty($res->get('error'));
     }
 
     public function testCustomCache()

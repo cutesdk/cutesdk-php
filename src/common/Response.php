@@ -57,6 +57,11 @@ class Response
         }
     }
 
+    public function __debugInfo()
+    {
+        return $this->json();
+    }
+
     public function __call($method, $arguments)
     {
         if (method_exists($this->innerResponse, $method)) {
